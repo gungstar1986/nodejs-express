@@ -1,14 +1,1 @@
-[
-  {
-    "title": "React JS",
-    "price": "10000",
-    "url": "https://blog.addthiscdn.com/wp-content/uploads/2014/11/addthis-react-flux-javascript-scaling.png",
-    "id": "3abb1e5d-8e7c-478d-86d0-5896bf5cce58"
-  },
-  {
-    "title": "Angular",
-    "price": "9000",
-    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_full_color_logo.svg/1200px-Angular_full_color_logo.svg.png",
-    "id": "80ff8b77-1bb0-44f5-98a6-7b7bc66f2281"
-  }
-]
+[{"title":"React JS","price":"12000","url":"https://fslightbox.com/img/environments/react.png","id":"96782fe3-d601-44c6-a67d-70379babe2bf"},{"title":"Vue JS","price":"10000","url":"https://givik.ru/assets/img/post/vuejs.png","id":"25a4e3e8-c2b0-4aba-908f-736a5d8fd9a7"},{"title":"Angular","price":"9000","url":"https://lauterry.github.io/slides-prez-angular/img/angularjs.png","id":"fdfeb388-18bf-47c9-86ae-a40295a3fb55"},{"title":"3456","price":"3456","url":"3456","id":"bbc85b0f-33bc-47df-b470-bc3baa93b533"}]

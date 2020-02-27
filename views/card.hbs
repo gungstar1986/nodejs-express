@@ -1,0 +1,10 @@
+<h1>Корзина</h1>
+
+{{#if courses.length}}
+    {{#each courses}}
+        <p>{{title}}</p>
+        <p>{{price}}</p>
+        <p>{{count}}</p>
+    {{/each}}
+{{else}}
+{{/if}}

@@ -9,13 +9,22 @@
             {{/if}}
             {{#if isAdd}}
                 <li class="active"><a href="/add">Add Courses</a></li>
-                {{else}}
+            {{else}}
                 <li><a href="/add">Add Courses</a></li>
             {{/if}}
             {{#if isCourses}}
                 <li class="active"><a href="/courses">Courses</a></li>
-                {{else}}
+            {{else}}
                 <li><a href="/courses">Courses</a></li>
+            {{/if}}
+            {{#if isCard}}
+                <li class="active"><a href="/card">
+                    <img class="basket-icon" src="https://cdn2.iconfinder.com/data/icons/25-free-ui-icons/40/basket-64.png" alt="">
+                </a></li>
+            {{else}}
+                <li><a href="/card">
+                    <img class="basket-icon" src="https://cdn2.iconfinder.com/data/icons/25-free-ui-icons/40/basket-64.png" alt="">
+                </a></li>
             {{/if}}
         </ul>
     </div>
