@@ -6,11 +6,12 @@ const cardLink = path.join(path.dirname(process.mainModule.filename), 'data', 'c
 
 class Card {
 
+    // Add card to the basket
     static async add(course) {
         // Получаем содержимое card.json
         const card = await Card.fetch();
 
-        // Проверяем, есть ли выбранный item в данных card.json
+        // Проверяем, есть ли выбранный item в данных card.json (корзина)
         const ind = card.courses.findIndex(item => item.id === course.id);
         const target = card.courses[ind];
 
@@ -37,7 +38,33 @@ class Card {
         })
     }
 
-    static fetch() {
+    // Remove card from basket
+    static async remove(id) {
+        const card = await Card.fetch();
+        const ind = card.courses.findIndex(item => item.id === id);
+        const course = card.courses[ind];
+
+        // if item.count = 1 => удаляем курс из массива json
+        if (course.count === 1) {
+            card.courses = card.courses.filter(elem => elem.id !== id)
+            // Уменьшаем count на 1
+        } else {
+            card.courses[ind].count--
+        }
+
+        card.price -= course.price;
+
+        // Re-write data
+        return new Promise((resolve, reject) => {
+            fs.writeFile(cardLink, JSON.stringify(card), err => {
+                if (err) reject(err);
+                resolve(card)
+            })
+        })
+    }
+
+    // Get all cards
+    static async fetch() {
         return new Promise((resolve, reject) => {
             fs.readFile(cardLink, 'utf-8', (err, content) => {
                 if (err) reject(err);

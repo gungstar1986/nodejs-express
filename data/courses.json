@@ -1,1 +1,20 @@
-[{"title":"React JS","price":"12000","url":"https://fslightbox.com/img/environments/react.png","id":"96782fe3-d601-44c6-a67d-70379babe2bf"},{"title":"Vue JS","price":"10000","url":"https://givik.ru/assets/img/post/vuejs.png","id":"25a4e3e8-c2b0-4aba-908f-736a5d8fd9a7"},{"title":"Angular","price":"9000","url":"https://lauterry.github.io/slides-prez-angular/img/angularjs.png","id":"fdfeb388-18bf-47c9-86ae-a40295a3fb55"},{"title":"3456","price":"3456","url":"3456","id":"bbc85b0f-33bc-47df-b470-bc3baa93b533"}]
+[
+  {
+    "title": "React JS",
+    "price": "12000",
+    "url": "https://fslightbox.com/img/environments/react.png",
+    "id": "96782fe3-d601-44c6-a67d-70379babe2bf"
+  },
+  {
+    "title": "Vue JS",
+    "price": "10000",
+    "url": "https://givik.ru/assets/img/post/vuejs.png",
+    "id": "25a4e3e8-c2b0-4aba-908f-736a5d8fd9a7"
+  },
+  {
+    "title": "Angular",
+    "price": "9000",
+    "url": "https://lauterry.github.io/slides-prez-angular/img/angularjs.png",
+    "id": "fdfeb388-18bf-47c9-86ae-a40295a3fb55"
+  }
+]

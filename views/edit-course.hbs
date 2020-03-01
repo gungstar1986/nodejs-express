@@ -1,8 +1,8 @@
 <h1>Edit course {{course.title}}</h1>
 
+
 <!--Add form-->
 <form action="/courses/edit" method="post">
-
     <div class="input-field ">
         <input id="title" name="title" type="text" class="validate" value="{{course.title}}" required>
         <label for="title">Courses name</label>
@@ -21,9 +21,12 @@
         <span class="helper-text" data-error="Enter image URL"></span>
     </div>
 
-    <input type="hidden" name="id" value="{{course.id}}">
+    <input type="hidden" name="id" value="{{course._id}}">
     <button type="submit" class="btn btn-primary">Edit</button>
-    <button type="submit" class="btn btn-primary red">Delete</button>
 </form>
 <!--Add form-->
 
+<form action="/courses/remove" method="post">
+    <input type="hidden" name="id" value="{{course._id}}">
+    <button type="submit" class="btn btn-primary red user">Remove</button>
+</form>

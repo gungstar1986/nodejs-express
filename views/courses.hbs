@@ -1,6 +1,4 @@
 <h1>Courses</h1>
-
-
 {{#if courses.length}}
     {{#each courses}}
         <div class="row">
@@ -14,12 +12,11 @@
                         <p class="price">{{price}}</p>
                     </div>
                     <div class="card-action flex">
-                        <a href="/courses/{{id}}" target="_blank">Open course</a>
-                        <a href="/courses/{{id}}/edit?allow=true" >Edit</a>
+                        <a href="/courses/{{_id}}/">Open course</a>
+                        <a href="/courses/{{_id}}/edit?allow=true">Edit</a>
 
-<!--                        // Форма покупки товара-->
                         <form action="/card/add" method="POST">
-                            <input type="hidden" name="id" value="{{id}}">
+                            <input type="hidden" name="id" value="{{_id}}">
                             <button type="submit" class="btn btn-primary">Buy</button>
                         </form>
 
@@ -29,4 +26,5 @@
         </div>
     {{/each}}
 {{else}}
+    <h1>Тут пока ничего нет</h1>
 {{/if}}
