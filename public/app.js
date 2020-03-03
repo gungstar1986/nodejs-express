@@ -23,20 +23,26 @@ if ($card) {
             }).then(promise => promise.json())
                 .then(card => {
                     if (card.courses.length) {
+
+                        // Render new layout page
                         const html = card.courses.map(item => {
-                            return `<tbody>
-                        <tr>
-                            <td>${item.title}</td>
-                            <td>${item.price}</td>
-                            <td>${item.count}</td>
-                            <td>
-                                <button class="btn btn-small js-remove" data-id="${id}">Delete</button>
-                            </td>
-                        </tr>
-                    </tbody>`
+                            return `
+                            <tbody>
+                                <tr>
+                                    <td>${item.title}</td>
+                                    <td>${item.price}</td>
+                                    <td>${item.count}</td>
+                                    <td>
+                                        <button class="btn btn-small js-remove" data-id="${item.id}">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>`
                         }).join('');
+
+                        // Перезапись в тег <tbody>... </tbody> данных рендеринга нового содержимого из {{html}}  
                         $card.querySelector('tbody').innerHTML = html;
-                        $card.querySelector('.price').textContent = priceRebuild(card.price)
+                        // Вывод общей стоимости кусов
+                        $card.querySelector('.price').textContent = priceRebuild(card.coast)
                     } else {
                         $card.innerHTML = "<h1>В корзине ничего нет</h1>"
                     }

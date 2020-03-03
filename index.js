@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const User = require('./models/user');
 const exphbs = require('express-handlebars');
 const app = express();
 
@@ -20,9 +21,19 @@ app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 app.set('views', 'views'); // Folder with .hbs files
 
+// Use local directory --- optional
 app.use(express.static(path.join(__dirname, 'public'))); // Connect user .css file
 app.use(express.urlencoded({extended: false})); // URL encoded
 
+// Find at least one active user
+app.use(async (req, res, next) => {
+    try {
+        req.user = await User.findById('5e5d3cbe904c080fdcb9aa46');
+        next()
+    } catch (e) {
+        console.log(e)
+    }
+});
 
 // Use routes {home, add, courses, card}
 app.use('/', homeRoutes);
@@ -36,6 +47,21 @@ async function dbConnect() {
     try {
         const mongoURL = "mongodb+srv://user-admin:DoHfH5UFk13F3WEv@cluster0-jgyf1.mongodb.net/mongoDB";
         await mongoose.connect(mongoURL, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
+
+        // Проверяем на наличие хотя бы одного юзера
+        const candidate = await User.findOne().lean();
+
+
+        // Если юзера нет => create new User
+        if (!candidate) {
+            const user = new User({
+                name: 'Denis',
+                email: 'gungstar1986@gmail.com',
+                cart: {items: []}
+            });
+            await user.save()
+        }
+
 
         // Start Server
         const PORT = process.env.PORT || 3000;

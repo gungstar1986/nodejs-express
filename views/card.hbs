@@ -1,18 +1,19 @@
 <h1>Корзина</h1>
 
-<div id="card" >
-{{#if courses.length}}
+<div id="card">
+    {{#if courses.length}}
     <table>
         <thead>
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Count</th>
-            <th>Action</th>
-        </tr>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Count</th>
+                <th>Action</th>
+            </tr>
         </thead>
-        {{#each courses}}
-            <tbody>
+        <tbody>
+            {{!-- Отрисовки циклом по массиву курсов --}}
+            {{#each courses}}
             <tr>
                 <td>{{title}}</td>
                 <td>{{price}}</td>
@@ -21,13 +22,14 @@
                     <button class="btn btn-small js-remove" data-id="{{id}}">Delete</button>
                 </td>
             </tr>
-            </tbody>
-        {{/each}}
+            {{/each}}
+            {{!-- Отрисовки циклом по массиву курсов --}}
+        </tbody>
     </table>
 
 
     <p>Total price: <span class="price">{{coast}}</span></p>
-{{else}}
+    {{else}}
     <h1>В корзине ничего нет</h1>
-{{/if}}
+    {{/if}}
 </div>

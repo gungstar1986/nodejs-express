@@ -12,8 +12,12 @@ router.get('/', (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const {title, price, url} = req.body;
-        const course = new Course({title, price, url});
-        console.log(typeof course)
+        const course = new Course({
+            title,
+            price,
+            url,
+            userId: req.user._id // Взято из req.user (../index.js)
+        });
         await course.save();
         res.redirect('/courses')
     } catch (e) {
