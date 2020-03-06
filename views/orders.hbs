@@ -1,5 +1,7 @@
 <h1>Orders</h1>
+
 {{#if orders.length}}
+
 {{#each orders}}
 <div class="row">
     <div class="col s6 offset-s3">
@@ -12,8 +14,8 @@
                 <p><em>{{user.name}}</em> {{user.userId.email}}</p>
                 <ol>
                     {{#each courses}}
-                        <li>{{course.title}}</li>
-                    {{/each }}
+                    <li><strong></strong>{{course.title}}: x{{count}}</strong></li>
+                    {{/each}}
                 </ol>
                 <hr>
                 <p>Price: <div class="price">{{price}}</div>
@@ -22,6 +24,8 @@
         </div>
     </div>
 </div>
+
+
 
 <form action="/send">
     <button type="submit" class="btn blue">Send</button>

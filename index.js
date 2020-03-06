@@ -51,7 +51,7 @@ async function dbConnect() {
         await mongoose.connect(mongoURL, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
 
         // Проверяем на наличие хотя бы одного юзера
-        const candidate = await User.findOne().lean();
+        const candidate = await User.findOne();
 
 
         // Если юзера нет => create new User
