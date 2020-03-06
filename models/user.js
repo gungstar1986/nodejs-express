@@ -10,26 +10,24 @@ const userSchema = new Schema({
     required: true
   },
   cart: {
-    items: [
-      {
-        count: {
-          type: Number,
-          required: true,
-          default: 1
-        },
-        courseId: {
-          type: Schema.Types.ObjectID,
-          required: true,
-          ref: "Course" // Ссылка на модель Course
-        }
+    items: [{
+      count: {
+        type: Number,
+        required: true,
+        default: 1
+      },
+      courseId: {
+        type: Schema.Types.ObjectID,
+        required: true,
+        ref: "Course" // Ссылка на модель Course
       }
-    ]
+    }]
   }
 });
 
 
 // Add custom method to the User.prototype
-userSchema.methods.addToCart = function(course) {
+userSchema.methods.addToCart = function (course) {
   // Копия массива items
   const items = [...this.cart.items];
   // Поиск по индексу
@@ -50,7 +48,7 @@ userSchema.methods.addToCart = function(course) {
   return this.save();
 };
 
-userSchema.methods.removeFromCard = function(id) {
+userSchema.methods.removeFromCart = function (id) {
   // Копия массива items
   let items = [...this.cart.items];
   // Поиск по индекса
@@ -63,5 +61,13 @@ userSchema.methods.removeFromCard = function(id) {
   return this.save();
 };
 
+userSchema.methods.clearCart = function () {
+  this.cart = { items: [] }
+  return this.save()
+}
 
 module.exports = model("User", userSchema);
+
+
+
+

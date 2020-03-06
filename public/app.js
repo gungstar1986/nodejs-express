@@ -29,6 +29,7 @@ if ($card) {
                             return `
                             <tbody>
                                 <tr>
+                                    <td><img class="cart-image" src="${item.url}" alt=""></td>
                                     <td>${item.title}</td>
                                     <td>${item.price}</td>
                                     <td>${item.count}</td>

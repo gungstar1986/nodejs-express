@@ -38,6 +38,7 @@ router.get("/", async (req, res) => {
   // Получаем Общую цену
   const coast = userPrice(courses);
   // Отрисовка front-end ('./страница', { передача значений })
+  console.log(courses)
   res.render("card", {
     title: "Корзина",
     isCard: true,
@@ -48,7 +49,7 @@ router.get("/", async (req, res) => {
 
 // Удаление item из корзины
 router.delete("/remove/:id", async (req, res) => {
-  await req.user.removeFromCard(req.params.id);
+  await req.user.removeFromCart(req.params.id);
   const user = await req.user.populate("cart.items.courseId").execPopulate();
   const courses = userMap(user.cart);
   const cart = {

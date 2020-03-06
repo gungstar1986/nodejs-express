@@ -5,6 +5,7 @@
     <table>
         <thead>
             <tr>
+                <th>Logo</th>
                 <th>Name</th>
                 <th>Price</th>
                 <th>Count</th>
@@ -15,6 +16,7 @@
             {{!-- Отрисовки циклом по массиву курсов --}}
             {{#each courses}}
             <tr>
+                <td><img class="cart-image" src="{{url}}" alt=""></td>
                 <td>{{title}}</td>
                 <td>{{price}}</td>
                 <td>{{count}}</td>
@@ -29,6 +31,10 @@
 
 
     <p>Total price: <span class="price">{{coast}}</span></p>
+
+    <form action="/orders" method="POST">
+        <button type="submit" class="btn green user">Купить</button>
+    </form>
     {{else}}
     <h1>В корзине ничего нет</h1>
     {{/if}}
