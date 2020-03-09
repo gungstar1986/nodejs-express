@@ -9,6 +9,7 @@ const MongoStore = require('connect-mongodb-session')(session)
 const varMiddleware = require('./middlewares/variables')
 const userMiddleware = require('./middlewares/user')
 const app = express();
+const keys = require('./keys/keys')
 
 // Connect .hbs files (routes)
 const homeRoutes = require('./routes/home');
@@ -18,12 +19,10 @@ const coursesRoutes = require('./routes/courses');
 const ordersRoute = require('./routes/orders')
 const loginRoute = require('./routes/login')
 
-// URL MongoDB 
-const mongoURL = "mongodb+srv://user-admin:DoHfH5UFk13F3WEv@cluster0-jgyf1.mongodb.net/mongoDB";
 // Customize MongoDB Store
 const store = new MongoStore({
     collection: 'sessions',
-    uri: mongoURL
+    uri: keys.MONGO_URI
 })
 
 // Customize "express-handlebar"
@@ -41,7 +40,7 @@ app.use(express.urlencoded({ extended: false })); // URL encoded
 
 // Customize {express-session}
 app.use(session({
-    secret: 'some secret value',
+    secret: keys.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: store
@@ -55,7 +54,6 @@ app.use(flash())
 app.use(varMiddleware)
 app.use(userMiddleware)
 
-
 // Use routes {home, add, courses, card}
 app.use('/', homeRoutes);
 app.use('/add', addRoutes);
@@ -67,7 +65,7 @@ app.use('/', loginRoute)
 // MongoDB connection
 async function dbConnect() {
     try {
-        await mongoose.connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
+        await mongoose.connect(keys.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 
         // Start Server
         const PORT = process.env.PORT || 3000;

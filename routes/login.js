@@ -1,7 +1,19 @@
 const { Router } = require('express');
+const nodemailer = require('nodemailer')
+const sendgrid = require('nodemailer-sendgrid-transport')
 const crypt = require('bcryptjs')
+const crypto = require('crypto')
+const keys = require('../keys/keys')
 const User = require('../models/user')
+const resetMail = require('../mail/reset')
 const router = Router()
+const regMail = require('../mail/registration')
+
+
+// Autosend mailer
+const transporter = nodemailer.createTransport(sendgrid({
+    auth: { auth_key: keys.SENDGRID_API_KEY }
+}))
 
 
 router.get('/login', (req, res) => {
@@ -44,7 +56,7 @@ router.post('/login', async (req, res) => {
     }
 })
 
-
+// =>
 router.post('/register', async (req, res) => {
     try {
         const { email, name, password, confirm } = req.body
@@ -52,13 +64,14 @@ router.post('/register', async (req, res) => {
         if (notUniq) {
             // Если пользователь существует - передаем ошибку
             req.flash('regError', 'Email уже занят')
-            res.redirect('/login#register')
+            return res.redirect('/login#register') // редирект с выходом из функции 
         }
         // Crypt password
         const hashPass = await crypt.hash(password, 10)
         const user = new User({ email, name, password: hashPass, cart: { items: [] } })
         await user.save()
         res.redirect('/login')
+        // await transporter.sendMail(regMail(email)) // Send registartion mail
     } catch (error) {
         console.log(error)
     }
@@ -70,6 +83,80 @@ router.get('/logout', async (req, res) => {
         res.redirect('login')
     })
 })
+
+
+router.get('/reset/password/:token', async (req, res) => {
+    try {
+        if (!req.params.token) return res.redirect('/login')
+        const user = await User.findOne({ resetToken: req.params.token, resetTokenExp: { $gt: Date.now() } })
+        if (!user) return res.redirect('/login')
+        res.render('auth/password', {
+            title: 'Recover password',
+            error: req.flash('error'),
+            userId: user._id.toString(),
+            token: req.params.token
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+
+router.post('/password', async (req, res) => {
+    try {
+        const user = await User.findOne({ _id: req.body.userId, resetToken: req.body.token, resetTokenExp: { $gt: Date.now() } })
+        if (user) {
+            user.password = await crypt.hash(req.body.password, 10)
+            user.resetToken = undefined
+            user.resetTokenExp = undefined
+            await user.save()
+            res.redirect('/login')
+        } else {
+            req.flash('logError', 'Время жизни ссылки истекло')
+            res.redirect('/login')
+        }
+    } catch (error) {
+        console.log(error)
+    }
+
+
+    res.redirect('/login')
+})
+
+
+router.get('/reset', (req, res) => {
+    res.render('auth/reset', {
+        title: 'Reset password',
+        resetErr: req.flash('resetErr')
+    })
+})
+
+// =>
+router.post('/reset', (req, res) => {
+    try {
+        crypto.randomBytes(32, async (err, buffer) => {
+            if (err) {
+                req.flash('resetErr', 'Что-то пошло не так. Попробуйте, пожалуйста, позже')
+                return res.redirect('/reset')
+            }
+            const token = buffer.toString('hex')
+            const candidate = await User.findOne({ email: req.body.email })
+            if (candidate) {
+                candidate.resetToken = token
+                candidate.resetTokenExp = Date.now() + 60 * 60 * 1000
+                await candidate.save()
+                // await transporter.sendMail(resetMail(candidate.mail, token))
+                res.redirect('/login')
+            } else {
+                req.flash('resetErr', 'Email не существует')
+                res.redirect('/reset')
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 
 
 module.exports = router

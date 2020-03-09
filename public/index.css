@@ -60,3 +60,11 @@
     background: rgb(2, 253, 232);
     border-radius: 10px;
 }
+
+.pass {
+    margin-bottom: 50px;
+}
+
+.reset-link {
+    margin-left: 50px;
+}
