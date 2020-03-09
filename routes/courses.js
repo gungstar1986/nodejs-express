@@ -1,5 +1,6 @@
 const {Router} = require('express');
 const Course = require('../models/course');
+const auth = require('../middlewares/auth')
 const router = Router();
 
 // Items list
@@ -23,7 +24,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Edit item by id
-router.get('/:id/edit', async (req, res) => {
+router.get('/:id/edit', auth, async (req, res) => {
     if (!req.query.allow) return res.redirect('/');
     const course = await Course.findById(req.params.id).lean();
     res.render("edit-course", {
@@ -33,14 +34,14 @@ router.get('/:id/edit', async (req, res) => {
 });
 
 // Update item by id
-router.post('/edit', async (req, res) => {
+router.post('/edit', auth, async (req, res) => {
     const {id, title, price, url} = req.body;
     await Course.findByIdAndUpdate(id, {title, price, url});
     res.redirect('/courses')
 });
 
 // Remove item by id
-router.post('/remove', async (req, res) => {
+router.post('/remove', auth, async (req, res) => {
     const {id} = req.body;
     await Course.findByIdAndRemove(id);
     res.redirect('/courses')

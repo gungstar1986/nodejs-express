@@ -1,6 +1,7 @@
 // Реализация страницы "Корзина"
 const { Router } = require("express");
 const Course = require("../models/course");
+const auth = require('../middlewares/auth')
 const router = Router();
 
 // Re-build user data {req.user} => req.user - модель корзины from ('./index.js)
@@ -16,11 +17,11 @@ const userMap = array =>
 const userPrice = array => array.reduce((acc, curr) => acc + curr.price, 0);
 
 // Add item to tha cart (в корзину)
-router.post("/add", async (req, res) => {
+router.post("/add", auth, async (req, res) => {
   try {
     // Выбор курса по id
     const course = await Course.findById(req.body.id);
-    // Вызов custom метода у модели User(),
+    // Вызов custom метода у req.session,
     await req.user.addToCart(course);
     // Отрисовка front-end
     res.redirect("/card");
@@ -30,7 +31,7 @@ router.post("/add", async (req, res) => {
 });
 
 // Получаем содержимое корзины
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   // Получаем коллекцию user содержащую корзину пользователя
   const user = await req.user.populate("cart.items.courseId").execPopulate();
   // Получаем корзину
@@ -38,7 +39,7 @@ router.get("/", async (req, res) => {
   // Получаем Общую цену
   const coast = userPrice(courses);
   // Отрисовка front-end ('./страница', { передача значений })
-  console.log(courses)
+
   res.render("card", {
     title: "Корзина",
     isCard: true,
@@ -48,7 +49,7 @@ router.get("/", async (req, res) => {
 });
 
 // Удаление item из корзины
-router.delete("/remove/:id", async (req, res) => {
+router.delete("/remove/:id", auth, async (req, res) => {
   await req.user.removeFromCart(req.params.id);
   const user = await req.user.populate("cart.items.courseId").execPopulate();
   const courses = userMap(user.cart);

@@ -52,3 +52,11 @@
 .cart-image {
     height: 45px;
 }
+
+.alert {
+    position: fixed;
+    top: 50px;
+    right: 50px;
+    background: rgb(2, 253, 232);
+    border-radius: 10px;
+}

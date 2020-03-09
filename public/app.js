@@ -1,10 +1,9 @@
 // Re-struct price
 const priceRebuild = price => new Intl.NumberFormat(
     'ru-Ru', {
-        currency: 'uah',
-        style: 'currency'
-    }).format(price);
-
+    currency: 'uah',
+    style: 'currency'
+}).format(price);
 document.querySelectorAll('.price').forEach(node => node.textContent = priceRebuild(node.textContent));
 
 
@@ -16,10 +15,15 @@ if ($card) {
     $card.addEventListener('click', event => {
         if (event.target.classList.contains('js-remove')) {
             const id = event.target.dataset.id;
+            // Забираем csrf у объекта
+            const csrf = event.target.dataset.csrf
 
             // add async delete function via fetch('url', method: 'some method').then(... )
             fetch('card/remove/' + id, {
-                method: 'delete'
+                method: 'delete',
+                headers: {
+                    'X-XSRF-TOKEN': csrf
+                }
             }).then(promise => promise.json())
                 .then(card => {
                     if (card.courses.length) {
@@ -52,5 +56,5 @@ if ($card) {
     })
 }
 
-
-
+// Materialize initialize JS
+const instance = M.Tabs.init(document.querySelectorAll('.tabs'));

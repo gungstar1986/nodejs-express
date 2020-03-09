@@ -2,37 +2,77 @@
     <div class="nav-wrapper">
         <a href="/" class="brand-logo">NodeJS APP</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
+
+            {{!-- Home Page --}}
             {{#if isHome}}
             <li class="active"><a href="/">Main</a></li>
             {{else}}
             <li><a href="/">Main</a></li>
             {{/if}}
-            {{#if isAdd}}
-            <li class="active"><a href="/add">Add Courses</a></li>
-            {{else}}
-            <li><a href="/add">Add Courses</a></li>
-            {{/if}}
+
+            {{!-- Courses page --}}
             {{#if isCourses}}
             <li class="active"><a href="/courses">Courses</a></li>
             {{else}}
             <li><a href="/courses">Courses</a></li>
             {{/if}}
+
+            {{!-- if Auth? --}}
+            {{#if isAuth}}
+
+            {{!-- Add course --}}
+            {{#if isAdd}}
+            <li class="active"><a href="/add">Add Courses</a></li>
+            {{else}}
+            <li><a href="/add">Add Courses</a></li>
+            {{/if}}
+
+            {{!-- Cart page --}}
             {{#if isCard}}
             <li class="active"><a href="/card"> Корзина </a></li>
             {{else}}
             <li><a href="/card">Корзина</a></li>
             {{/if}}
+
+            {{!-- Order page --}}
             {{#if isOrders}}
-            <li class="active"><a href="/orders">
-                    <img class="basket-icon"
-                        src="https://cdn2.iconfinder.com/data/icons/25-free-ui-icons/40/basket-64.png" alt="">
-                </a></li>
+            <li class="active">
+                <a href="/orders">
+                    Заказы
+                </a>
+            </li>
             {{else}}
-            <li><a href="/orders">
-                    <img class="basket-icon"
-                        src="https://cdn2.iconfinder.com/data/icons/25-free-ui-icons/40/basket-64.png" alt="">
-                </a></li>
+            <li>
+                <a href="/orders">
+                    Заказы
+                </a>
+            </li>
             {{/if}}
+
+            {{!-- Logout --}}
+            <li><a href="/logout">Выйти</a></li>
+
+
+            {{!-- If isAuth => false --}}
+            {{else}}
+
+            {{!-- Login page --}}
+            {{#if isLogin}}
+            <li class="active"><a href="/login#login"> Логин </a></li>
+            {{else}}
+            <li><a href="/login#login">Логин</a></li>
+            {{/if}}
+
+
+            {{/if}}
+
+
+
+
+
+
+
+
         </ul>
     </div>
 </nav>

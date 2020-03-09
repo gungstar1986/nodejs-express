@@ -1,10 +1,11 @@
 const { Router } = require('express')
 const Order = require('../models/order')
+const auth = require('../middlewares/auth') // redirect middelware
 const router = Router()
 
 
 
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
     try {
         const orders = await Order.find({ 'user.userId': req.user._id }).populate('user.userId')
         const targetOrder = orders.map(item => {
@@ -26,7 +27,7 @@ router.get('/', async (req, res) => {
 })
 
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     try {
         const user = await req.user.populate('cart.items.courseId').execPopulate()
         const courses = user.cart.items.map(elem => ({
