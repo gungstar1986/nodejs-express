@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "handlebars": "^4.5.0",
-    "lodash": ">=4.17.12",
+    "lodash": ">=4.17.13",
     "nodemon": "^2.0.2"
   }
 }
