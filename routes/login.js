@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const { validationResult } = require('express-validator')
 const nodemailer = require('nodemailer')
 const sendgrid = require('nodemailer-sendgrid-transport')
 const crypt = require('bcryptjs')
@@ -8,6 +9,7 @@ const User = require('../models/user')
 const resetMail = require('../mail/reset')
 const router = Router()
 const regMail = require('../mail/registration')
+const { regValidators } = require('../utils/validators')
 
 
 // Autosend mailer
@@ -56,16 +58,19 @@ router.post('/login', async (req, res) => {
     }
 })
 
-// =>
-router.post('/register', async (req, res) => {
+// => body() - validador from express-validator... IMPORTANT!
+router.post('/register', regValidators, async (req, res) => {
     try {
-        const { email, name, password, confirm } = req.body
-        const notUniq = await User.findOne({ email })
-        if (notUniq) {
-            // Если пользователь существует - передаем ошибку
-            req.flash('regError', 'Email уже занят')
-            return res.redirect('/login#register') // редирект с выходом из функции 
+        // Get params from request body (frontend <form/> side)
+        const { email, name, password } = req.body
+
+        // Validation request value (Создание валидатора)
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            req.flash('regError', errors.array()[0].msg) // errors.array()[0].msg => сообщение об ошибки из валидатора
+            return res.status(422).redirect('/login#register') // redirect to '/register' page
         }
+
         // Crypt password
         const hashPass = await crypt.hash(password, 10)
         const user = new User({ email, name, password: hashPass, cart: { items: [] } })
