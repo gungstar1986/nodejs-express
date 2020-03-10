@@ -32,20 +32,24 @@ router.post("/add", auth, async (req, res) => {
 
 // Получаем содержимое корзины
 router.get("/", auth, async (req, res) => {
-  // Получаем коллекцию user содержащую корзину пользователя
-  const user = await req.user.populate("cart.items.courseId").execPopulate();
-  // Получаем корзину
-  const courses = userMap(user.cart);
-  // Получаем Общую цену
-  const coast = userPrice(courses);
-  // Отрисовка front-end ('./страница', { передача значений })
-
-  res.render("card", {
-    title: "Корзина",
-    isCard: true,
-    courses: courses,
-    coast: coast
-  });
+  try {
+    // Получаем коллекцию user содержащую корзину пользователя
+    const user = await req.user.populate("cart.items.courseId").execPopulate();
+    // Получаем корзину
+    const courses = userMap(user.cart);
+    // Получаем Общую цену
+    const coast = userPrice(courses);
+    // Отрисовка front-end ('./страница', { передача значений })
+    res.render("card", {
+      title: "Корзина",
+      isCard: true,
+      courses: courses,
+      coast: coast
+    });
+  } catch (e) {
+    console.log(e)
+  }
+ 
 });
 
 // Удаление item из корзины

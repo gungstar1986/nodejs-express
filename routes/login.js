@@ -12,7 +12,7 @@ const regMail = require('../mail/registration')
 
 // Autosend mailer
 const transporter = nodemailer.createTransport(sendgrid({
-    auth: { auth_key: keys.SENDGRID_API_KEY }
+    auth: { api_key: keys.SENDGRID_API_KEY }
 }))
 
 
@@ -71,7 +71,7 @@ router.post('/register', async (req, res) => {
         const user = new User({ email, name, password: hashPass, cart: { items: [] } })
         await user.save()
         res.redirect('/login')
-        // await transporter.sendMail(regMail(email)) // Send registartion mail
+        await transporter.sendMail(regMail(email)) // Send registartion mail
     } catch (error) {
         console.log(error)
     }
@@ -145,7 +145,7 @@ router.post('/reset', (req, res) => {
                 candidate.resetToken = token
                 candidate.resetTokenExp = Date.now() + 60 * 60 * 1000
                 await candidate.save()
-                // await transporter.sendMail(resetMail(candidate.mail, token))
+                await transporter.sendMail(resetMail(candidate.email, token))
                 res.redirect('/login')
             } else {
                 req.flash('resetErr', 'Email не существует')

@@ -16,7 +16,13 @@
 
                 {{!-- Выход в корень переданных данных @root.someVariable --}}
                 {{#if @root.isAuth}}
+
+                {{!-- Compare with hbs-helpers --}}
+                {{#ifeq userId._id @root.userId}}
                 <a href="/courses/{{_id}}/edit?allow=true">Edit</a>
+                {{/ifeq }}
+                {{!-- Compare with hbs-helpers --}}
+
                 <form action="/card/add" method="POST">
                     <input type="hidden" name="_csrf" value="{{@root.csrf}}">
                     <input type="hidden" name="id" value="{{_id}}">
