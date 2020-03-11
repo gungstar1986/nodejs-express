@@ -4,8 +4,10 @@ const path = require('path');
 const csrf = require('csurf')
 const flash = require('connect-flash')
 const exphbs = require('express-handlebars');
+const helmet = require('helmet')
 const session = require('express-session')
 const MongoStore = require('connect-mongodb-session')(session)
+const compression = require('compression')
 const varMiddleware = require('./middlewares/variables')
 const userMiddleware = require('./middlewares/user')
 const fileMiddleware = require('./middlewares/files')
@@ -54,10 +56,12 @@ app.use(session({
 // Подключение fileMiddleware => после express-session но ПЕРЕД csurf
 // .single() => загружаем всего один файл; avatar => поле, куда будет складываться файлы
 app.use(fileMiddleware.single('avatar'))
-
+// MiddleWares connection
 // Connect csurf & connect-flash (after express-session connection)
 app.use(csrf())
 app.use(flash())
+app.use(helmet())
+app.use(compression())
 
 // Connect user middleware variable
 app.use(varMiddleware)
@@ -78,7 +82,6 @@ app.use(errorPage) // Error page (подключается после всех �
 async function dbConnect() {
     try {
         await mongoose.connect(keys.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
-
         // Start Server
         const PORT = process.env.PORT || 3000;
         app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

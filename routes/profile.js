@@ -14,10 +14,9 @@ router.get('/', auth, async (req, res) => {
 router.post('/', auth, async (req, res) => {
 
     try {
-        const { name, email } = req.user
-        const user = await User.findOne({ email })
+        const user = await User.findOne({ email: req.user.email })
         // Временный объект для измененных данных
-        const toChange = { name }
+        const toChange = { name: req.body.name }
 
         // Если файл передан в форму, то добавляем поле во временный объект
         if (req.file) {
