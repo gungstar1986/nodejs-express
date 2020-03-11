@@ -8,6 +8,7 @@ const session = require('express-session')
 const MongoStore = require('connect-mongodb-session')(session)
 const varMiddleware = require('./middlewares/variables')
 const userMiddleware = require('./middlewares/user')
+const errorPage = require('./middlewares/error')
 const app = express();
 const keys = require('./keys/keys')
 
@@ -62,6 +63,7 @@ app.use('/courses', coursesRoutes);
 app.use('/card', cardRoutes);
 app.use('/orders', ordersRoute);
 app.use('/', loginRoute)
+app.use(errorPage) // Error page (подключается после всех роутов)
 
 // MongoDB connection
 async function dbConnect() {

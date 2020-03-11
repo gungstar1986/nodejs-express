@@ -9,7 +9,7 @@ const User = require('../models/user')
 const resetMail = require('../mail/reset')
 const router = Router()
 const regMail = require('../mail/registration')
-const { regValidators } = require('../utils/validators')
+const { regValidators, loginValidators } = require('../utils/validators')
 
 
 // Autosend mailer
@@ -28,31 +28,14 @@ router.get('/login', (req, res) => {
 })
 
 
-router.post('/login', async (req, res) => {
+router.post('/login', loginValidators, async (req, res) => {
     try {
-        const { email, password } = req.body
-
-        const candidate = await User.findOne({ email }) // find an existing user
-        if (candidate) {
-            // de-crypt & check password 
-            const isSame = await crypt.compare(password, candidate.password) // compare passwords if user exist
-            if (isSame) {
-                req.session.user = candidate
-                req.session.isAuthenticated = true
-                req.session.save(err => {
-                    if (err) throw err
-                    res.redirect('/courses')
-                })
-            }
-            else {
-                req.flash('logError', 'Проверьте введенные данные')
-                res.redirect('/login#login')
-            }
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            req.flash('logError', errors.array()[0].msg)
+            return res.status(422).redirect('/login#login')
         }
-        else {
-            req.flash('logError', 'Проверьте введенные данные')
-            res.redirect('/login#login')
-        }
+        res.redirect('/courses')
     } catch (error) {
         console.log(error)
     }
@@ -63,6 +46,7 @@ router.post('/register', regValidators, async (req, res) => {
     try {
         // Get params from request body (frontend <form/> side)
         const { email, name, password } = req.body
+        const targetMail = email.toLowerCase().trim() // Приводим email к lowerCase()
 
         // Validation request value (Создание валидатора)
         const errors = validationResult(req)
@@ -73,7 +57,7 @@ router.post('/register', regValidators, async (req, res) => {
 
         // Crypt password
         const hashPass = await crypt.hash(password, 10)
-        const user = new User({ email, name, password: hashPass, cart: { items: [] } })
+        const user = new User({ email: targetMail, name, password: hashPass, cart: { items: [] } })
         await user.save()
         res.redirect('/login')
         await transporter.sendMail(regMail(email)) // Send registartion mail
@@ -145,13 +129,13 @@ router.post('/reset', (req, res) => {
                 return res.redirect('/reset')
             }
             const token = buffer.toString('hex')
-            const candidate = await User.findOne({ email: req.body.email })
+            const candidate = await User.findOne({ email: req.body.email.toLowerCase().trim() })
             if (candidate) {
                 candidate.resetToken = token
                 candidate.resetTokenExp = Date.now() + 60 * 60 * 1000
                 await candidate.save()
-                await transporter.sendMail(resetMail(candidate.email, token))
                 res.redirect('/login')
+                await transporter.sendMail(resetMail(candidate.email, token))
             } else {
                 req.flash('resetErr', 'Email не существует')
                 res.redirect('/reset')
@@ -161,7 +145,6 @@ router.post('/reset', (req, res) => {
         console.log(error)
     }
 })
-
 
 
 module.exports = router

@@ -1,7 +1,11 @@
 const { Router } = require('express');
 const Course = require('../models/course');
 const auth = require('../middlewares/auth')
+const { courseValidators } = require('../utils/validators')
+const { validationResult } = require('express-validator')
 const router = Router();
+
+
 const notOwner = (courseId, userId) => courseId.toString() !== userId.toString()
 
 // Items list
@@ -44,17 +48,24 @@ router.get('/:id/edit', auth, async (req, res) => {
         // ==>
         res.render("edit-course", {
             title: `Edit ${course.title}`,
-            course
+            course,
+            err: req.flash('err')
         })
     } catch (error) {
         console.log(error)
     }
-
 });
 
 // Update item by id
-router.post('/edit', auth, async (req, res) => {
+router.post('/edit', auth, courseValidators, async (req, res) => {
     const { id, title, price, url } = req.body; // Данные курса
+
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        req.flash('err', errors.array()[0].msg)
+        return res.status(422).redirect(`/courses/${id}/edit?allow=true`)
+    }
+
     try {
         // Защита от несанкционированного редактирования путем подмены id курса
         const course = await Course.findById(id)
