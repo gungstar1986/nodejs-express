@@ -68,3 +68,8 @@
 .reset-link {
     margin-left: 50px;
 }
+
+.avatar {
+    width: 150px;
+    height: auto;
+}

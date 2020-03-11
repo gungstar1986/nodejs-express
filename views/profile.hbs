@@ -1,0 +1,45 @@
+<h1>Профиль</h1>
+<div class="row">
+    <div class="col s6">
+        {{!-- Поле аватара --}}
+
+        {{#if user.avatarURL}}
+        <img class="avatar" src="/{{user.avatarURL}}" alt="">
+        {{else}}
+        <img class="avatar" src="../images/noavatar.png" alt="">
+        <h4>No avatar</h4>
+        {{/if}}
+
+
+    </div>
+    <div class="col s6">
+        {{!-- Поле формы -------- enctype="multipart/form-data" => форма, указывающая, что нужно принимать файлы --}}
+        <form action="/profile" method="POST" enctype="multipart/form-data">
+
+            <p>Ваш email: <strong>{{user.email}}</strong></p>
+            <p>Изменить имя:</p>
+            <div class="input-field ">
+                <input id="name" name="name" type="text" value="{{user.name}}" class="validate" required>
+                <label for="name">Новое имя</label>
+                <span class="helper-text" data-error="Имя не может быть пустым"></span>
+            </div>
+
+            {{!-- Форма для загрузки файлов --}}
+            <div class="file-field input-field">
+                <div class="btn">
+                    <span>Файл аватара</span>
+                    {{!-- Input name "avatar" --}}
+                    <input type="file" name="avatar"> 
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
+            </div>
+
+            {{!-- Изменить --}}
+            <input type="hidden" name="_csrf" value="{{csrf}}">
+            <button class="btn pink" type="submit">Отправить</button>
+
+        </form>
+    </div>
+</div>

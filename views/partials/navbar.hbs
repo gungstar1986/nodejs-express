@@ -49,6 +49,13 @@
             </li>
             {{/if}}
 
+            {{!-- Profile page --}}
+            {{#if isProfile}}
+            <li class="active"><a href="/profile"> Профиль </a></li>
+            {{else}}
+            <li><a href="/profile">Профиль</a></li>
+            {{/if}}
+
             {{!-- Logout --}}
             <li><a href="/logout">Выйти</a></li>
 
@@ -65,14 +72,6 @@
 
 
             {{/if}}
-
-
-
-
-
-
-
-
         </ul>
     </div>
 </nav>
